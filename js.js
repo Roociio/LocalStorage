@@ -1,21 +1,27 @@
-const nombre=document.getElementById("nombre");
-const contraseña=document.getElementById("contraseña");
-const boton=document.getElementById("boton");
-const mensaje=document.getElementById("mensaje");
+const btn=document.getElementById('boton')
+const nombre=document.getElementById('nombre')
+const contraseña=document.getElementById('contraseña')
+const mensaje=document.getElementById('mensaje')
 
-const nombreOriginal="rocio";
-const contraseñaOriginal="12345";
+btn.addEventListener("click",function(){
+const nombreValor=nombre.value //los valores de usuario y contraseña
+const contraseñaValor=contraseña.value
+const usuarioGuardado= JSON.parse(localStorage.getItem('usuario')) || {}//pasa el texto a objeto
 
-nombre.value = localStorage.getItem("nombre") || "";//y esto rellena  si hay datos 
-contraseña.value = localStorage.getItem("contraseña") || "";
-
-boton.addEventListener("click",function(){//al apretar el boton se guardan los datos y pasa todo esto
-    if (nombre.value === nombreOriginal && contraseña.value === contraseñaOriginal) {//se fija si los datos son correctos
-        mensaje.textContent = "¡Bienvenida, " + nombreOriginal + "!";
-        localStorage.setItem("nombre", nombre.value);
-        localStorage.setItem("contraseña", contraseña.value);
-    }else {
-        mensaje.textContent = "Datos incorrectos. Volve a intentar.Puto el que lee";
+if(!usuarioGuardado.nombre){//si no inicio sesion se registra
+    const usuarioNuevo={
+        nombre:nombreValor,
+        contraseña:contraseñaValor
     }
-     
+    localStorage.setItem('usuario', JSON.stringify(usuarioNuevo))//guarda los datos nuevos
+    mensaje.textContent="Usuario registrado"
+    return
+}else{//y si ya inicio sesion tiene que ingresar
+    if(
+        nombreValor === usuarioGuardado.nombre &&
+        contraseñaValor === usuarioGuardado.contraseña
+    ){
+        mensaje.textContent="Bienvenido "+nombreValor//si coincide ingresa
+    }else{mensaje.textContent="Error"}//si no sale error
+}
 })
